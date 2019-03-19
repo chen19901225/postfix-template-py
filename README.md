@@ -240,6 +240,7 @@ first commit
 ### 0.0.5
 update customTemplate examples
 
-
+### 0.0.8
+add mycustomTemplates to defaultCustomTemplates
 
 **Enjoy!**
