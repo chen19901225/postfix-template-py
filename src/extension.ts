@@ -37,7 +37,7 @@ function registerCompletionProvider (context: vsc.ExtensionContext) {
 
   let DOCUMENT_SELECTOR: vsc.DocumentSelector =
     process.env.NODE_ENV === 'test' ? 'postfix' : vsc.workspace.getConfiguration('postfix-py').get('languages')
-    console.log("postfix-python"+",document:"+ DOCUMENT_SELECTOR+provider.templates.length);
+    console.log("postfix-python"+",document:"+ DOCUMENT_SELECTOR, "template_length:", provider.templates.length);
     // channel.appendLine("document:" +DOCUMENT_SELECTOR + ", provider length:" + provider.templates.length);
   completionProvider = vsc.languages.registerCompletionItemProvider(DOCUMENT_SELECTOR, provider, '.')
   context.subscriptions.push(completionProvider)

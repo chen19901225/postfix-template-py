@@ -5,6 +5,7 @@ import { IPostfixTemplate } from './template'
 import { CustomTemplate } from './templates/customTemplate'
 import * as vsc from "vscode"
 let currentSuggestion = undefined
+let reg_word = /^[a-z_A-Z0-9\)\]]*(?:[\)\]]\:)?$/ // 有可能reg_word 为空，虽然不知道为什么
 
 export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
   templates: IPostfixTemplate[] = []
@@ -18,11 +19,17 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
     let line_text = line.text
     
     const dotIdx = line.text.lastIndexOf('.', position.character)
-    const parentIdx = line.text.lastIndexOf("(", position.character)
-    const squareIdx = line.text.lastIndexOf("[", position.character)
-    if (dotIdx === -1  || squareIdx > dotIdx || parentIdx > dotIdx) {
+    
+    if (dotIdx === -1 ) {
       return []
     }
+    const pending_text = line_text.substr(dotIdx+1)
+    let pending_result = reg_word.test(pending_text)
+    console.log("postfix-py", "peding_text:", pending_text, "pending_result:", pending_result, "line_text:", line_text);
+    if ( pending_result=== false){
+      return [];
+    }
+
 
     //ignore in import, from
     if (line_text) {

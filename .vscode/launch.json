@@ -17,6 +17,7 @@
             "name": "Launch Tests",
             "type": "extensionHost",
             "request": "launch",
+            "env": {"NODE_ENV": "test"},
             "runtimeExecutable": "${execPath}",
             "args": ["--extensionDevelopmentPath=${workspaceRoot}", "--extensionTestsPath=${workspaceRoot}/out/test" ],
             "stopOnEntry": false,

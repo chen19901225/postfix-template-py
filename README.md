@@ -243,4 +243,10 @@ update customTemplate examples
 ### 0.0.8
 add mycustomTemplates to defaultCustomTemplates
 
+### 0.0.9
+try to fix situation like this  `if file = os.path.absfile(file): nn` -> `if file = os.path.absfile(file): is not None
+
+### 0.0.10
+still try to fix some bugs`
+
 **Enjoy!**
