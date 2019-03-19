@@ -4,7 +4,7 @@ this is a vscode extension postfix template for python
 
 ## Features
 
-inspired by   [vscode-postfix-ts](https://github.com/ipatalas/vscode-postfix-ts)
+copyed from  [vscode-postfix-ts](https://github.com/ipatalas/vscode-postfix-ts)
 
 ## Requirements
 
@@ -24,7 +24,7 @@ This extension contributes the following settings:
 ```
 "postfix-py.customTemplates": [{
         "name": "self",
-        "body": "self.{{expr}}={{expr}}",
+        "body": "self.{{expr}} = {{expr}}",
         "description": "self",
         "when": [
           "identifier", "unary-expression", "binary-expression", "expression", "function-call"
@@ -32,7 +32,7 @@ This extension contributes the following settings:
       },
       {
         "name": "apply_self",
-        "body": "{{expr}}=self.{{expr}}",
+        "body": "{{expr}} = self.{{expr}}",
         "description": "apply self",
         "when": [
           "identifier", "unary-expression", "binary-expression", "expression", "function-call"
@@ -40,7 +40,7 @@ This extension contributes the following settings:
       },
       {
         "name": "apply",
-        "body": "{{expr}}={{expr}}",
+        "body": "{{expr}} = {{expr}}",
         "description": "apply",
         "when": [
           "identifier", "unary-expression", "binary-expression", "expression", "function-call"
@@ -48,7 +48,7 @@ This extension contributes the following settings:
       },
       {
         "name": "none",
-        "body": "{{expr}}, self.{{expr}}=self.{{expr}}, None",
+        "body": "{{expr}}, self.{{expr}} = self.{{expr}}, None",
         "description": "self value none",
         "when": [
           "identifier", "unary-expression", "binary-expression", "expression", "function-call"
@@ -96,40 +96,48 @@ This extension contributes the following settings:
       },
       {
         "name": "apply_none",
-        "body": "{{expr}}=None",
-        "description": "double expr",
+        "body": "{{expr}} = None",
+        "description": "apply none value",
         "when": [
           "identifier", "unary-expression", "binary-expression", "expression", "function-call"
         ]
       },
       {
         "name": "apply_true",
-        "body": "{{expr}}=True",
-        "description": "double expr",
+        "body": "{{expr}} = True",
+        "description": "apply true value",
         "when": [
           "identifier", "unary-expression", "binary-expression", "expression", "function-call"
         ]
       },
       {
         "name": "apply_false",
-        "body": "{{expr}}=False",
-        "description": "double expr",
+        "body": "{{expr}} = False",
+        "description": "apply false value",
+        "when": [
+          "identifier", "unary-expression", "binary-expression", "expression", "function-call"
+        ]
+      },
+      {
+        "name": "apply_dict",
+        "body": "{{expr}} = {}",
+        "description": "apply dict value",
         "when": [
           "identifier", "unary-expression", "binary-expression", "expression", "function-call"
         ]
       },
       {
         "name": "apply_empty",
-        "body": "{{expr}}=\"\"",
-        "description": "double expr",
+        "body": "{{expr}} = \"\"",
+        "description": "apply empty string",
         "when": [
           "identifier", "unary-expression", "binary-expression", "expression", "function-call"
         ]
       },
       {
         "name": "apply_list",
-        "body": "{{expr}}=[]",
-        "description": "double expr",
+        "body": "{{expr}} = []",
+        "description": "apply list",
         "when": [
           "identifier", "unary-expression", "binary-expression", "expression", "function-call"
         ]
@@ -137,7 +145,7 @@ This extension contributes the following settings:
       {
         "name": "yield",
         "body": "yield {{expr}}",
-        "description": "double expr",
+        "description": "yield value",
         "when": [
           "identifier", "unary-expression", "binary-expression", "expression", "function-call"
         ]
@@ -152,7 +160,7 @@ This extension contributes the following settings:
       },
       {
         "name": "self_apply_none",
-        "body": "self.{{expr}}=None",
+        "body": "self.{{expr}} = None",
         "description": "double expr",
         "when": [
           "identifier", "unary-expression", "binary-expression", "expression", "function-call"
@@ -160,7 +168,7 @@ This extension contributes the following settings:
       },
       {
         "name": "self_apply_true",
-        "body": "self.{{expr}}=True",
+        "body": "self.{{expr}} = True",
         "description": "double expr",
         "when": [
           "identifier", "unary-expression", "binary-expression", "expression", "function-call"
@@ -176,7 +184,7 @@ This extension contributes the following settings:
       },
       {
         "name": "self_apply_false",
-        "body": "self.{{expr}}=False",
+        "body": "self.{{expr}} = False",
         "description": "double expr",
         "when": [
           "identifier", "unary-expression", "binary-expression", "expression", "function-call"
@@ -184,12 +192,37 @@ This extension contributes the following settings:
       },
       {
         "name": "self_apply_emtpy",
-        "body": "self.{{expr}}=\"\"",
+        "body": "self.{{expr}} = \"\"",
         "description": "double expr",
         "when": [
           "identifier", "unary-expression", "binary-expression", "expression", "function-call"
         ]
       }
+      {
+        "name": "self_apply_dict",
+        "body": "self.{{expr}} = {}",
+        "description": "apply dict value",
+        "when": [
+          "identifier", "unary-expression", "binary-expression", "expression", "function-call"
+        ]
+      },
+      {
+        "name": "ifn",
+        "body": "if {{expr}} is None:",
+        "description": "if is None",
+        "when": [
+          "identifier", "unary-expression", "binary-expression", "expression", "function-call"
+        ]
+      },
+      {
+        "name": "ifnn",
+        "body": "if {{expr}} is not None",
+        "description": "if is not None",
+        "when": [
+          "identifier", "unary-expression", "binary-expression", "expression", "function-call"
+        ]
+      }
+
     ],
 ```
 
@@ -203,6 +236,9 @@ Users appreciate release notes as you update your extension.
 
 ### 0.0.4
 first commit 
+
+### 0.0.5
+update customTemplate examples
 
 
 

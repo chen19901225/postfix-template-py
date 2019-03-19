@@ -15,11 +15,24 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
 
   provideCompletionItems (document: vsc.TextDocument, position: vsc.Position, token: vsc.CancellationToken): vsc.CompletionItem[] | vsc.CompletionList | Thenable<vsc.CompletionItem[] | vsc.CompletionList> {
     const line = document.lineAt(position.line)
+    let line_text = line.text
+    
     const dotIdx = line.text.lastIndexOf('.', position.character)
-
-    if (dotIdx === -1) {
+    const parentIdx = line.text.lastIndexOf("(", position.character)
+    const squareIdx = line.text.lastIndexOf("[", position.character)
+    if (dotIdx === -1  || squareIdx > dotIdx || parentIdx > dotIdx) {
       return []
     }
+
+    //ignore in import, from
+    if (line_text) {
+      line_text =line_text.trimLeft();
+      if (line_text.startsWith("from ") || line_text.startsWith("import ") ) {
+        return [];
+      }
+    }
+
+    // if ( squareIdx > dotIdx )
 
     const codePiece = line.text.substring(line.firstNonWhitespaceCharacterIndex, dotIdx)
 
