@@ -70,7 +70,7 @@
             }
             
           },
-          "default" :[{
+          "default" : [{
             "name": "self",
             "body": "self.{{expr}} = {{expr}}",
             "description": "self",
@@ -266,6 +266,14 @@
             "name": "ifnn",
             "body": "if {{expr}} is not None",
             "description": "if is not None",
+            "when": [
+              "identifier", "unary-expression", "binary-expression", "expression", "function-call"
+            ]
+          },
+          {
+            "name": "not",
+            "body": "not {{expr}}",
+            "description": "not expr",
             "when": [
               "identifier", "unary-expression", "binary-expression", "expression", "function-call"
             ]
