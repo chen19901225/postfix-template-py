@@ -69,7 +69,7 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
 
     const codePiece = line.text.substring(line.firstNonWhitespaceCharacterIndex, dotIdx)
 
-    let source = ts.createSourceFile('test.ts', codePiece, ts.ScriptTarget.ES5, true)
+    let source = ts.createSourceFile('test.ts', codePiece, ts.ScriptTarget.ES5, true) // 这段代码什么意思？ 怎么弄成python的呢？
     const code = line.text.substr(line.firstNonWhitespaceCharacterIndex)
 
     const currentNode = findNodeAtPosition(source, dotIdx - line.firstNonWhitespaceCharacterIndex - 1)
@@ -78,7 +78,7 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
       return []
     }
 
-    if (this.isInsideComment(document, position)) {
+    if (this.isInsideComment(document, position)) { // 判断处于注释里面
       return []
     }
 
@@ -132,14 +132,14 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
 export const getCurrentSuggestion = () => currentSuggestion
 export const resetCurrentSuggestion = () => currentSuggestion = undefined
 
-const findNodeAtPosition = (source: ts.SourceFile, character: number) => {
+const findNodeAtPosition = (source: ts.SourceFile, character: number) => { //这个什么意思？
   let matchingNodes: INode[] = []
-  source.statements.forEach(visitNode)
+  source.statements.forEach(visitNode) 
   let sortedNodes = _.orderBy(matchingNodes, [m => m.width, m => m.depth], ['asc', 'desc'])
 
   return sortedNodes.length > 0 && sortedNodes[0].node
 
-  function visitNode (node: ts.Node, depth: number = 0) {
+  function visitNode (node: ts.Node, depth: number = 0) { // 这个换成python的是怎么样的？
     const start = node.getStart(source)
     const end = node.getEnd()
 

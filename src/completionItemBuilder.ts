@@ -29,13 +29,13 @@ export class CompletionItemBuilder {
     if (useSnippets) {
       const escapedCode = codeBeforeTheDot.replace('$', '\\$')
 
-      this.item.insertText = new vsc.SnippetString(replacement.replace(new RegExp('{{expr}}', 'g'), escapedCode))
+      this.item.insertText = new vsc.SnippetString(replacement.replace(new RegExp('{{expr}}', 'g'), escapedCode)) // 这个什么意思？
     } else {
-      this.item.insertText = replacement.replace(new RegExp('{{expr}}', 'g'), codeBeforeTheDot)
+      this.item.insertText = replacement.replace(new RegExp('{{expr}}', 'g'), codeBeforeTheDot) // 这个什么意思？?
     }
 
     this.item.additionalTextEdits = [
-      vsc.TextEdit.delete(new vsc.Range(position.translate(0, -codeBeforeTheDot.length - 1), position))
+      vsc.TextEdit.delete(new vsc.Range(position.translate(0, -codeBeforeTheDot.length - 1), position)) // 这个呢？
     ]
 
     return this
