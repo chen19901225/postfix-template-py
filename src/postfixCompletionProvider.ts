@@ -7,6 +7,24 @@ import * as vsc from "vscode"
 let currentSuggestion = undefined
 let reg_word = /^\w*$/ // 有可能reg_word 为空，虽然不知道为什么
 
+function string_count(source: string, search:string): number {
+  let search_len = search.length;
+  let count: number = 0;
+  for(let i=0;i<=source.length - search_len;i++) {
+    let is_match = 1;
+    for(let j=0;j < search_len; j++) {
+      if(source[i+j] !== search[j]) {
+        is_match = 0;
+        break;
+      }
+    }
+    if (is_match === 1) {
+      count ++;
+    }
+  }
+  return count;
+}
+
 export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
   templates: IPostfixTemplate[] = []
   constructor () {
@@ -18,14 +36,17 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
     const line = document.lineAt(position.line)
     let line_text = line.text
     
+    
     const dotIdx = line.text.lastIndexOf('.', position.character)
     
     if (dotIdx === -1 ) {
       return []
     }
     const pending_text = line_text.substring(dotIdx+1, position.character)
+    const prefix_text = line_text.substring(0, dotIdx)
     let pending_result = reg_word.test(pending_text)
-    console.log("postfix-py", "peding_text:", pending_text, "pending_result:", pending_result, "line_text:", line_text);
+    console.log("postfix-py", "peding_text:", pending_text, "pending_result:", pending_result, "line_text:", line_text, "prefix_text:", prefix_text,
+      "quote_count:", string_count(prefix_text, '"') - string_count(prefix_text, '\\"'));
     if ( pending_result=== false){
       return [];
     }
@@ -39,7 +60,12 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
       }
     }
 
-    // if ( squareIdx > dotIdx )
+    // 判断是否处于 引号中
+    if ((string_count(prefix_text, '"')-string_count(prefix_text, '\\"')) %2 || 
+        (string_count(prefix_text, "'") - string_count(prefix_text, "\\'")) %2  
+    ) {
+      return [];
+    }
 
     const codePiece = line.text.substring(line.firstNonWhitespaceCharacterIndex, dotIdx)
 
