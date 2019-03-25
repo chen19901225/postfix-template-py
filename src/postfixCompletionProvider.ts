@@ -28,23 +28,23 @@ function string_count(source: string, search:string): number {
 export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
   templates: IPostfixTemplate[] = []
   constructor () {
-    this.loadBuiltinTemplates()
+    // this.loadBuiltinTemplates()
     this.loadCustomTemplates()
   }
 
   provideCompletionItems (document: vsc.TextDocument, position: vsc.Position, token: vsc.CancellationToken): vsc.CompletionItem[] | vsc.CompletionList | Thenable<vsc.CompletionItem[] | vsc.CompletionList> {
-    const line = document.lineAt(position.line)
+    const line = document.lineAt(position.line) // 当前行内容
     let line_text = line.text
     
     
-    const dotIdx = line.text.lastIndexOf('.', position.character)
+    const dotIdx = line.text.lastIndexOf('.', position.character)  // .的position
     
     if (dotIdx === -1 ) {
       return []
     }
-    const pending_text = line_text.substring(dotIdx+1, position.character)
-    const prefix_text = line_text.substring(0, dotIdx)
-    let pending_result = reg_word.test(pending_text)
+    const pending_text = line_text.substring(dotIdx+1, position.character)  // .以后的内容
+    const prefix_text = line_text.substring(0, dotIdx) // .以前的内容
+    let pending_result = reg_word.test(pending_text)  //.以后的内容 是否不含有特殊字符
     console.log("postfix-py", "peding_text:", pending_text, "pending_result:", pending_result, "line_text:", line_text, "prefix_text:", prefix_text,
       "quote_count:", string_count(prefix_text, '"') - string_count(prefix_text, '\\"'));
     if ( pending_result=== false){
@@ -67,12 +67,12 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
       return [];
     }
 
-    const codePiece = line.text.substring(line.firstNonWhitespaceCharacterIndex, dotIdx)
+    const codePiece = line.text.substring(line.firstNonWhitespaceCharacterIndex, dotIdx)  // .以前代码
 
     let source = ts.createSourceFile('test.ts', codePiece, ts.ScriptTarget.ES5, true) // 这段代码什么意思？ 怎么弄成python的呢？
-    const code = line.text.substr(line.firstNonWhitespaceCharacterIndex)
+    const code = line.text.substr(line.firstNonWhitespaceCharacterIndex) // 本行的代码
 
-    const currentNode = findNodeAtPosition(source, dotIdx - line.firstNonWhitespaceCharacterIndex - 1)
+    const currentNode = findNodeAtPosition(source, dotIdx - line.firstNonWhitespaceCharacterIndex - 1) //获取节点
 
     if (!currentNode) {
       return []
@@ -92,7 +92,7 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
     return item
   }
 
-  private isInsideComment (document: vsc.TextDocument, position: vsc.Position) {
+  private isInsideComment (document: vsc.TextDocument, position: vsc.Position) { //这个用python来写怎么写？
     const source = ts.createSourceFile('test.ts', document.getText(), ts.ScriptTarget.ES5, true)
     const pos = source.getPositionOfLineAndCharacter(position.line, position.character)
     const nodeKind = findNodeAtPosition(source, pos).kind
