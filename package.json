@@ -2,7 +2,7 @@
     "name": "postfix-template-py",
     "displayName": "postfix-template-py",
     "description": "vscode postfix template py",
-    "version": "0.0.16",
+    "version": "0.0.17",
     "publisher": "cqh",
     "engines": {
       "vscode": "^1.32.0"
@@ -15,10 +15,19 @@
       "url": "https://github.com/chen19901225/postfix-template-py/issues"
     },
     "categories": [
-      "Other"
+      "Other",
+      "Snippets"
     ],
-    "activationEvents": [
-      "*"
+    "keywords": [
+      "template",
+      "postfix", 
+      "snippet",
+      "python"
+  ],
+  "activationEvents": [
+      "onLanguage:python",
+    "onLanguage:jupyter",
+    "onDebugResolve:python"
     ],
     "main": "./dist/extension",
     "contributes": {
