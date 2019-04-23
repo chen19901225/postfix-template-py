@@ -2,7 +2,7 @@
     "name": "postfix-template-py",
     "displayName": "postfix-template-py",
     "description": "vscode postfix template py",
-    "version": "0.0.19",
+    "version": "0.0.20",
     "publisher": "cqh",
     "engines": {
       "vscode": "^1.32.0"
@@ -107,6 +107,18 @@
                 "name": "apply",
                 "body": "{{expr}} = {{expr}}",
                 "description": "apply",
+                "when": [
+                  "identifier",
+                  "unary-expression",
+                  "binary-expression",
+                  "expression",
+                  "function-call"
+                ]
+              },
+              {
+                "name": "define_apply",
+                "body": "{{expr}}={{expr}}",
+                "description": "method apply",
                 "when": [
                   "identifier",
                   "unary-expression",
@@ -347,6 +359,18 @@
                 "name": "self_apply_dict",
                 "body": "self.{{expr}} = {}",
                 "description": "apply dict value",
+                "when": [
+                  "identifier",
+                  "unary-expression",
+                  "binary-expression",
+                  "expression",
+                  "function-call"
+                ]
+              },
+              {
+                "name": "self_apply_list",
+                "body": "self.{{expr}} = []",
+                "description": "apply list value",
                 "when": [
                   "identifier",
                   "unary-expression",
