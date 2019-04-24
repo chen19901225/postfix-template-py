@@ -546,4 +546,7 @@ still try to fix some bugs`
 ## 0.0.20
 still update template bugs
 
+## 0.0.21 
+stip update template bugs
+
 **Enjoy!**

@@ -2,7 +2,7 @@
     "name": "postfix-template-py",
     "displayName": "postfix-template-py",
     "description": "vscode postfix template py",
-    "version": "0.0.20",
+    "version": "0.0.22",
     "publisher": "cqh",
     "engines": {
       "vscode": "^1.32.0"
@@ -91,18 +91,7 @@
                   "function-call"
                 ]
               },
-              {
-                "name": "apply_self",
-                "body": "{{expr}} = self.{{expr}}",
-                "description": "apply self",
-                "when": [
-                  "identifier",
-                  "unary-expression",
-                  "binary-expression",
-                  "expression",
-                  "function-call"
-                ]
-              },
+              
               {
                 "name": "apply",
                 "body": "{{expr}} = {{expr}}",
@@ -116,9 +105,33 @@
                 ]
               },
               {
-                "name": "define_apply",
+                "name": "apply_self",
+                "body": "{{expr}} = self.{{expr}}",
+                "description": "apply self",
+                "when": [
+                  "identifier",
+                  "unary-expression",
+                  "binary-expression",
+                  "expression",
+                  "function-call"
+                ]
+              },
+              {
+                "name": "def_apply_",
                 "body": "{{expr}}={{expr}}",
                 "description": "method apply",
+                "when": [
+                  "identifier",
+                  "unary-expression",
+                  "binary-expression",
+                  "expression",
+                  "function-call"
+                ]
+              },
+              {
+                "name": "def_apply_empty",
+                "body": "{{expr}}=\"\"",
+                "description": "method apply empty string",
                 "when": [
                   "identifier",
                   "unary-expression",
