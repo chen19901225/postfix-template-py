@@ -7,6 +7,10 @@ import * as vsc from "vscode"
 let currentSuggestion = undefined
 let reg_word = /^\w*$/ // 有可能reg_word 为空，虽然不知道为什么
 
+
+export const AllTabs = /^\t+$/
+export const AllSpaces = /^ +$/
+
 function string_count(source: string, search:string): number {
   let search_len = search.length;
   let count: number = 0;
@@ -28,7 +32,7 @@ function string_count(source: string, search:string): number {
 export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
   templates: IPostfixTemplate[] = []
   constructor () {
-    // this.loadBuiltinTemplates()
+    this.loadBuiltinTemplates()
     this.loadCustomTemplates()
   }
 
@@ -81,10 +85,11 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
     if (this.isInsideComment(document, position)) { // 判断处于注释里面
       return []
     }
+    const indentSize = this.getIndentSize(document, currentNode)
 
     return this.templates
       .filter(t => t.canUse(currentNode))
-      .map(t => t.buildCompletionItem(code, position, currentNode, line.text.substring(dotIdx, position.character)))
+      .map(t => t.buildCompletionItem(currentNode, indentSize))
   }
 
   resolveCompletionItem (item: vsc.CompletionItem, token: vsc.CancellationToken): vsc.ProviderResult<vsc.CompletionItem> {
@@ -127,6 +132,23 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
       }
     })
   }
+
+  private getIndentSize(document: vsc.TextDocument, node: ts.Node): number | undefined {
+    const source = node.getSourceFile()
+    const position = ts.getLineAndCharacterOfPosition(source, node.getStart(source))
+
+    const line = document.lineAt(position.line)
+    const whitespaces = line.text.substring(0, line.firstNonWhitespaceCharacterIndex)
+
+    if (AllTabs.test(whitespaces)) {
+      return whitespaces.length
+    }
+
+    if (AllSpaces.test(whitespaces)) {
+      return whitespaces.length / (vsc.window.activeTextEditor.options.tabSize as number)
+    }
+  }
+
 }
 
 export const getCurrentSuggestion = () => currentSuggestion
@@ -167,3 +189,6 @@ interface ICustomTemplateDefinition {
   body: string,
   when: string[]
 }
+
+
+  

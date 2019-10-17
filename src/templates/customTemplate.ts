@@ -21,15 +21,15 @@ export class CustomTemplate extends BaseTemplate {
     super()
   }
 
-  buildCompletionItem (code: string, position: Position, node: ts.Node, suffix: string) {
+  buildCompletionItem (node: ts.Node, indentSize?: number) {
     let currentNode = this.getCurrentNode(node);
     console.log("postfix-python", "current_node:", currentNode, "name:", this.name, "text:", currentNode.getText() + suffix);
     // this.channel.appendLine("Current_node:" + currentNode + "name:" + this.name + ", text:" + currentNode.getText() + suffix);
 
     return CompletionItemBuilder
-      .create(this.name, currentNode.getText() + suffix)
+      .create(this.name, currentNode.getText())
       .description(this.description)
-      .replace(this.body, position, true)
+      .replace(this.body, true)
       .build()
   }
 
