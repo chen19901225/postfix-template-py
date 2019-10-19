@@ -4,7 +4,7 @@ import { IPostfixTemplate } from '../template'
 
 export abstract class BaseTemplate implements IPostfixTemplate {
   // abstract buildCompletionItem (code: string, position: vsc.Position, node: ts.Node, suffix: string)
-  abstract buildCompletionItem(node: ts.Node, indentSize?: number)
+  abstract buildCompletionItem(node: ts.Node, postion: vsc.Position,  indentSize?: number)
   abstract canUse (node: ts.Node): boolean
 
   protected isSimpleExpression = (node: ts.Node) => node.kind === ts.SyntaxKind.ExpressionStatement
@@ -31,7 +31,7 @@ export abstract class BaseTemplate implements IPostfixTemplate {
 }
 
 export abstract class BaseExpressionTemplate extends BaseTemplate {
-  abstract buildCompletionItem (code: string, position: vsc.Position, node: ts.Node)
+  abstract buildCompletionItem(node: ts.Node,position: vsc.Position,  indentSize?: number)
 
   canUse (node: ts.Node) {
     return node.parent &&

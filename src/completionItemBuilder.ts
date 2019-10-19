@@ -26,7 +26,7 @@ export class CompletionItemBuilder {
     return this
   }
 
-  public replace = (replacement: string, useSnippets?: boolean): CompletionItemBuilder => {
+  public replace = (replacement: string, position: vsc.Position, pending_length: number, useSnippets?: boolean): CompletionItemBuilder => {
     if (useSnippets) {
       const escapedCode = this.code.replace('$', '\\$')
 
@@ -35,18 +35,27 @@ export class CompletionItemBuilder {
       this.item.insertText = replacement.replace(new RegExp('{{expr}}', 'g'), this.code)
     }
 
-    const src = this.node.getSourceFile()
-    const nodeStart = ts.getLineAndCharacterOfPosition(src, this.node.getStart(src))
-    const nodeEnd = ts.getLineAndCharacterOfPosition(src, this.node.getEnd())
+    // const dotIdx = this.code.lastIndexOf('.')
+    // const codeBeforeTheDot = this.code.substr(0, dotIdx)
 
-    const rangeToDelete = new vsc.Range(
-      new vsc.Position(nodeStart.line, nodeStart.character),
-      new vsc.Position(nodeEnd.line, nodeEnd.character + 1) // accomodate 1 character for the dot
-    )
+    // const src = this.node.getSourceFile()
+    // const nodeStart = ts.getLineAndCharacterOfPosition(src, this.node.getStart(src))
+    // const nodeEnd = ts.getLineAndCharacterOfPosition(src, this.node.getEnd())
+
+    // const rangeToDelete = new vsc.Range(
+    //   new vsc.Position(nodeStart.line, nodeStart.character),
+    //   new vsc.Position(nodeEnd.line, nodeEnd.character + 1) // accomodate 1 character for the dot
+    // )
+    // this.item.additionalTextEdits = [
+    //   vsc.TextEdit.delete(rangeToDelete)
+    // ]
 
     this.item.additionalTextEdits = [
-      vsc.TextEdit.delete(rangeToDelete)
+      vsc.TextEdit.delete(new vsc.Range(position.translate(0, -this.code.length - pending_length), position)) // 这个呢？
     ]
+    // console
+
+
 
     return this
   }

@@ -2,10 +2,11 @@ import * as ts from 'typescript'
 import { CompletionItemBuilder } from '../completionItemBuilder'
 import { BaseTemplate } from './baseTemplates'
 import { getIndentCharacters } from '../utils'
+import * as vsc from "vscode"
 
 abstract class BaseForTemplate extends BaseTemplate {
   canUse(node: ts.Node): boolean {
-      return true;
+    return true;
     // return !this.inReturnStatement(node) &&
     //   !this.inIfStatement(node) &&
     //   !this.inFunctionArgument(node) &&
@@ -21,20 +22,68 @@ abstract class BaseForTemplate extends BaseTemplate {
   protected isArrayLiteral = (node: ts.Node) => node.kind === ts.SyntaxKind.ArrayLiteralExpression
 }
 
+
+function is_var_dict(text: string) {
+  if (["d", "kwargs"].indexOf(text) > -1) {
+    return true;
+  }
+  if (text.endsWith("_d")) {
+    return true;
+  }
+}
+function try_get_list_name(text: string): [boolean, string] {
+  for (let start of ["iter_", "list_"]) {
+    if (text.startsWith("iter_")) {
+      return [true, text.slice(start.length)]
+    }
+  }
+  if (text.endsWith("s")) {
+    return [true, text.slice(0, text.length - 1)]
+  }
+  return [false, ""]
+
+
+}
+
 export class ForTemplate extends BaseForTemplate {
-  buildCompletionItem(node: ts.Node, indentSize?: number) {
-    console.log("node:", node);
-    return CompletionItemBuilder
-      .create('for', node.getText())
-      .description('for (let i = 0; i < expr.Length; i++)')
-      .replace(`for (let \${1:i} = 0; \${1} < \${2:{{expr}}}.length; \${1}++) {\n${getIndentCharacters()}\${0}\n}`, true)
-      .build()
+  buildCompletionItem(node: ts.Node, position: vsc.Position, pending_length: number, indentSize?: number) {
+    // console.log("node:", node);
+    let nodeText = node.getText();
+    if (is_var_dict(nodeText)) {
+      return CompletionItemBuilder
+        .create('for', node)
+        .description('for (let i = 0; i < expr.Length; i++)')
+        .replace(`for (\${1:key},\${2:value}) in \${3:{{expr}}}.items():`, position, pending_length, true)
+        // .replace(`for (let \${1:i} = 0; \${1} < \${2:{{expr}}}.length; \${1}++) {\n${getIndentCharacters()}\${0}\n}`, true)
+        .build()
+    }
+    let [flag, name] = try_get_list_name(nodeText);
+    if (!flag) {
+      return CompletionItemBuilder
+        .create('for', node)
+        .description('for (let i = 0; i < expr.Length; i++)')
+        .replace(`for \${1:ele} in \${2:{{expr}}}:`, position, pending_length, true)
+        // .replace(`for (let \${1:i} = 0; \${1} < \${2:{{expr}}}.length; \${1}++) {\n${getIndentCharacters()}\${0}\n}`, true)
+        .build()
+    } else {
+      let replace_text = 'for ${1:' + name + '} in ${2:{{expr}}}:';
+      return CompletionItemBuilder
+        .create('for', node)
+        .description('for (let i = 0; i < expr.Length; i++)')
+        .replace(replace_text, position, pending_length, true)
+        // .replace(`for (let \${1:i} = 0; \${1} < \${2:{{expr}}}.length; \${1}++) {\n${getIndentCharacters()}\${0}\n}`, true)
+        .build()
+    }
+
+
   }
 
   canUse(node: ts.Node) {
-    return super.canUse(node)
+    let flag = super.canUse(node)
       && !this.isArrayLiteral(node)
       && !this.isCallExpression(node)
+    // console.log("postfixtemplate:flag, ", flag);
+    return flag
   }
 }
 
@@ -60,6 +109,6 @@ export class ForTemplate extends BaseForTemplate {
 
 export const build = () => [
   new ForTemplate(),
-//   new ForOfTemplate(),
-//   new ForEachTemplate()
+  //   new ForOfTemplate(),
+  //   new ForEachTemplate()
 ]

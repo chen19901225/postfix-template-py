@@ -17,23 +17,23 @@ export class CustomTemplate extends BaseTemplate {
     ['function-call', (node: ts.Node) => this.isCallExpression(node.parent)]
   ])
 
-  constructor (private name: string, private description: string, private body: string, private conditions: string[] ) {
+  constructor(private name: string, private description: string, private body: string, private conditions: string[]) {
     super()
   }
 
-  buildCompletionItem (node: ts.Node, indentSize?: number) {
+  buildCompletionItem(node: ts.Node, pos: vsc.Position, pending_length: number, indentSize?: number) {
     let currentNode = this.getCurrentNode(node);
-    console.log("postfix-python", "current_node:", currentNode, "name:", this.name, "text:", currentNode.getText() + suffix);
+    console.log("postfix-python", "current_node:", currentNode, "name:", this.name, "text:", currentNode.getText());
     // this.channel.appendLine("Current_node:" + currentNode + "name:" + this.name + ", text:" + currentNode.getText() + suffix);
 
     return CompletionItemBuilder
-      .create(this.name, currentNode.getText())
+      .create(this.name, currentNode)
       .description(this.description)
-      .replace(this.body, true)
+      .replace(this.body, pos, pending_length, true)
       .build()
   }
 
-  canUse (node: ts.Node): boolean {
+  canUse(node: ts.Node): boolean {
     return node.parent && (this.conditions.length === 0 || this.conditions.some(c => this.condition(node, c)))
   }
 

@@ -86,10 +86,17 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
       return []
     }
     const indentSize = this.getIndentSize(document, currentNode)
-
-    return this.templates
-      .filter(t => t.canUse(currentNode))
-      .map(t => t.buildCompletionItem(currentNode, indentSize))
+    let out = []
+    for(let template of this.templates) {
+      if(template.canUse(currentNode)) {
+        let item = template.buildCompletionItem(currentNode,position,pending_text.length + 1, indentSize);
+        out.push(item);
+      }
+    }
+    return out
+    // return this.templates
+    //   .filter(t => t.canUse(currentNode))
+    //   .map(t => t.buildCompletionItem(currentNode, indentSize))
   }
 
   resolveCompletionItem (item: vsc.CompletionItem, token: vsc.CancellationToken): vsc.ProviderResult<vsc.CompletionItem> {
@@ -119,18 +126,27 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
   }
 
   private loadBuiltinTemplates = () => {
-    let files = glob.sync('./templates/*.js', { cwd: __dirname })
-    files.forEach(path => {
-      let builder: () => IPostfixTemplate | IPostfixTemplate[] = require(path).build
-      if (builder) {
-        let tpls = builder()
-        if (Array.isArray(tpls)) {
-          this.templates.push(...tpls)
-        } else {
-          this.templates.push(tpls)
-        }
+    // let files = glob.sync('./templates/*.js', { cwd: __dirname })
+    // files.forEach(path => {
+    //   let builder: () => IPostfixTemplate | IPostfixTemplate[] = require(path).build
+    //   if (builder) {
+    //     let tpls = builder()
+    //     if (Array.isArray(tpls)) {
+    //       this.templates.push(...tpls)
+    //     } else {
+    //       this.templates.push(tpls)
+    //     }
+    //   }
+    // })
+    let builder = require("./templates/forTemplate").build
+    if(builder) {
+      let tpls = builder()
+      if(Array.isArray(tpls)) {
+        this.templates.push(...tpls)
+      } else {
+        this.templates.push(tpls)
       }
-    })
+    }
   }
 
   private getIndentSize(document: vsc.TextDocument, node: ts.Node): number | undefined {
