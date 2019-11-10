@@ -474,6 +474,18 @@
                 "expression",
                 "function-call"
               ]
+            },
+            {
+              "name": "if_yield",
+              "body": "if {{expr}} is not None:\n    yield {{expr}}",
+              "description": "method apply None",
+              "when": [
+                "identifier",
+                "unary-expression",
+                "binary-expression",
+                "expression",
+                "function-call"
+              ]
             }
           ]
         }
