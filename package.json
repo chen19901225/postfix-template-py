@@ -486,6 +486,18 @@
                 "expression",
                 "function-call"
               ]
+            },
+            {
+              "name": "if_return",
+              "body": "if {{expr}} is not None:\n    return {{expr}}",
+              "description": "method apply None",
+              "when": [
+                "identifier",
+                "unary-expression",
+                "binary-expression",
+                "expression",
+                "function-call"
+              ]
             }
           ]
         }
