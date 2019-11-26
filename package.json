@@ -501,6 +501,18 @@
             },
             {
               "name": "ifn_return",
+              "body": "if {{expr}} is None:\n    return None",
+              "description": "method apply return None",
+              "when": [
+                "identifier",
+                "unary-expression",
+                "binary-expression",
+                "expression",
+                "function-call"
+              ]
+            },
+            {
+              "name": "ifn_return",
               "body": "if {{expr}} is None:\n    return {{expr}}",
               "description": "method apply None",
               "when": [
