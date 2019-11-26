@@ -49,8 +49,8 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
     const pending_text = line_text.substring(dotIdx+1, position.character)  // .以后的内容
     const prefix_text = line_text.substring(0, dotIdx) // .以前的内容
     let pending_result = reg_word.test(pending_text)  //.以后的内容 是否不含有特殊字符
-    console.log("postfix-py", "peding_text:", pending_text, "pending_result:", pending_result, "line_text:", line_text, "prefix_text:", prefix_text,
-      "quote_count:", string_count(prefix_text, '"') - string_count(prefix_text, '\\"'));
+    // console.log("postfix-py", "peding_text:", pending_text, "pending_result:", pending_result, "line_text:", line_text, "prefix_text:", prefix_text,
+    //   "quote_count:", string_count(prefix_text, '"') - string_count(prefix_text, '\\"'));
     if ( pending_result=== false){
       return [];
     }

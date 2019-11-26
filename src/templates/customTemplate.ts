@@ -23,7 +23,7 @@ export class CustomTemplate extends BaseTemplate {
 
   buildCompletionItem(node: ts.Node, pos: vsc.Position, pending_length: number, indentSize?: number) {
     let currentNode = this.getCurrentNode(node);
-    console.log("postfix-python", "current_node:", currentNode, "name:", this.name, "text:", currentNode.getText());
+    // console.log("postfix-python", "current_node:", currentNode, "name:", this.name, "text:", currentNode.getText());
     // this.channel.appendLine("Current_node:" + currentNode + "name:" + this.name + ", text:" + currentNode.getText() + suffix);
 
     return CompletionItemBuilder
