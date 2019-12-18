@@ -550,6 +550,7 @@
   },
   "dependencies": {
     "glob": "^7.1.3",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.11",
+    "typescript-char": "0.0.0"
   }
 }

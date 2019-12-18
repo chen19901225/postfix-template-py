@@ -4,6 +4,20 @@ import { adjustMultilineIndentation } from './utils/multiline-expressions'
 
 const COMPLETION_ITEM_TITLE = 'Postfix templates'
 
+class DocumentPosition {
+  constructor(public document: vsc.TextDocument, public position: vsc.Position) { }
+
+  public static fromObject(item: object): DocumentPosition {
+    // tslint:disable-next-line:no-any
+    return (item as any)._documentPosition as DocumentPosition;
+  }
+
+  public attachTo(item: object): void {
+    // tslint:disable-next-line:no-any
+    (item as any)._documentPosition = this;
+  }
+}
+
 export class CompletionItemBuilder {
   private item: vsc.CompletionItem
   private code: string
@@ -59,10 +73,15 @@ export class CompletionItemBuilder {
       throw new Error("dot not find in line:" + line);
     }
     const pending_text = line_text.substring(dotIdx + 1, position.character)
-
-    this.item.additionalTextEdits = [
-      vsc.TextEdit.delete(new vsc.Range(position.translate(0, -this.code.length - pending_text.length - 1), position)) // 这个呢？
-    ]
+    let documentPostion = new DocumentPosition(document, position);
+    documentPostion.attachTo(this.item);
+    // this.item.range= vsc.Range()
+    this.item.range = new vsc.Range(position.translate(0, -this.code.length - pending_text.length - 1), position);
+    // this.item.additionalTextEdits = [
+    //   vsc.TextEdit.delete(new vsc.Range(position.translate(0, -this.code.length - pending_text.length - 1), position.translate(
+    //     0, pending_text.length + 1
+    //   ))) // 这个呢？
+    // ]
     // console
 
 

@@ -1,0 +1,1 @@
+export type EnvironmentVariables = Object & Record<string, string | undefined>;
