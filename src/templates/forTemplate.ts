@@ -30,6 +30,9 @@ function is_var_dict(text: string) {
   if (text.endsWith("_d")) {
     return true;
   }
+  if(text.startsWith("d_")) {
+    return true;
+  }
 }
 function try_get_list_name(text: string): [boolean, string] {
   for (let start of ["iter_", "list_"]) {
