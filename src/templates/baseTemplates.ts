@@ -4,8 +4,8 @@ import { IPostfixTemplate } from '../template'
 
 export abstract class BaseTemplate implements IPostfixTemplate {
   // abstract buildCompletionItem (code: string, position: vsc.Position, node: ts.Node, suffix: string)
-  abstract buildCompletionItem(node: ts.Node, postion: vsc.Position,  indentSize?: number)
-  abstract canUse (node: ts.Node): boolean
+  abstract buildCompletionItem(node: ts.Node, postion: vsc.Position, document: vsc.TextDocument, indentSize?: number)
+  abstract canUse(node: ts.Node): boolean
 
   protected isSimpleExpression = (node: ts.Node) => node.kind === ts.SyntaxKind.ExpressionStatement
   protected isPropertyAccessExpression = (node: ts.Node) => node.kind === ts.SyntaxKind.PropertyAccessExpression
@@ -31,9 +31,9 @@ export abstract class BaseTemplate implements IPostfixTemplate {
 }
 
 export abstract class BaseExpressionTemplate extends BaseTemplate {
-  abstract buildCompletionItem(node: ts.Node,position: vsc.Position,  indentSize?: number)
+  abstract buildCompletionItem(node: ts.Node, position: vsc.Position, document: vsc.TextDocument, indentSize?: number)
 
-  canUse (node: ts.Node) {
+  canUse(node: ts.Node) {
     return node.parent &&
       !this.inReturnStatement(node.parent) &&
       !this.inIfStatement(node.parent) &&

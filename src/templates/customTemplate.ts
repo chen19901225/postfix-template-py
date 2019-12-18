@@ -21,7 +21,7 @@ export class CustomTemplate extends BaseTemplate {
     super()
   }
 
-  buildCompletionItem(node: ts.Node, pos: vsc.Position, pending_length: number, indentSize?: number) {
+  buildCompletionItem(node: ts.Node, pos: vsc.Position, document: vsc.TextDocument, indentSize?: number) {
     let currentNode = this.getCurrentNode(node);
     // console.log("postfix-python", "current_node:", currentNode, "name:", this.name, "text:", currentNode.getText());
     // this.channel.appendLine("Current_node:" + currentNode + "name:" + this.name + ", text:" + currentNode.getText() + suffix);
@@ -29,7 +29,7 @@ export class CustomTemplate extends BaseTemplate {
     return CompletionItemBuilder
       .create(this.name, currentNode)
       .description(this.description)
-      .replace(this.body, pos, pending_length, true)
+      .replace(this.body, pos, document, true)
       .build()
   }
 

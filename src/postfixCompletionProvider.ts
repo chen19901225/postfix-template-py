@@ -11,19 +11,19 @@ let reg_word = /^\w*$/ // 有可能reg_word 为空，虽然不知道为什么
 export const AllTabs = /^\t+$/
 export const AllSpaces = /^ +$/
 
-function string_count(source: string, search:string): number {
+function string_count(source: string, search: string): number {
   let search_len = search.length;
   let count: number = 0;
-  for(let i=0;i<=source.length - search_len;i++) {
+  for (let i = 0; i <= source.length - search_len; i++) {
     let is_match = 1;
-    for(let j=0;j < search_len; j++) {
-      if(source[i+j] !== search[j]) {
+    for (let j = 0; j < search_len; j++) {
+      if (source[i + j] !== search[j]) {
         is_match = 0;
         break;
       }
     }
     if (is_match === 1) {
-      count ++;
+      count++;
     }
   }
   return count;
@@ -31,42 +31,42 @@ function string_count(source: string, search:string): number {
 
 export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
   templates: IPostfixTemplate[] = []
-  constructor () {
+  constructor() {
     this.loadBuiltinTemplates()
     this.loadCustomTemplates()
   }
 
-  provideCompletionItems (document: vsc.TextDocument, position: vsc.Position, token: vsc.CancellationToken): vsc.CompletionItem[] | vsc.CompletionList | Thenable<vsc.CompletionItem[] | vsc.CompletionList> {
+  provideCompletionItems(document: vsc.TextDocument, position: vsc.Position, token: vsc.CancellationToken): vsc.CompletionItem[] | vsc.CompletionList | Thenable<vsc.CompletionItem[] | vsc.CompletionList> {
     const line = document.lineAt(position.line) // 当前行内容
     let line_text = line.text
-    
-    
+
+
     const dotIdx = line.text.lastIndexOf('.', position.character)  // .的position
-    
-    if (dotIdx === -1 ) {
+
+    if (dotIdx === -1) {
       return []
     }
-    const pending_text = line_text.substring(dotIdx+1, position.character)  // .以后的内容
+    const pending_text = line_text.substring(dotIdx + 1, position.character)  // .以后的内容
     const prefix_text = line_text.substring(0, dotIdx) // .以前的内容
     let pending_result = reg_word.test(pending_text)  //.以后的内容 是否不含有特殊字符
     // console.log("postfix-py", "peding_text:", pending_text, "pending_result:", pending_result, "line_text:", line_text, "prefix_text:", prefix_text,
     //   "quote_count:", string_count(prefix_text, '"') - string_count(prefix_text, '\\"'));
-    if ( pending_result=== false){
+    if (pending_result === false) {
       return [];
     }
 
 
     //ignore in import, from
     if (line_text) {
-      line_text =line_text.trimLeft();
-      if (line_text.startsWith("from ") || line_text.startsWith("import ") ) {
+      line_text = line_text.trimLeft();
+      if (line_text.startsWith("from ") || line_text.startsWith("import ")) {
         return [];
       }
     }
 
     // 判断是否处于 引号中
-    if ((string_count(prefix_text, '"')-string_count(prefix_text, '\\"')) %2 || 
-        (string_count(prefix_text, "'") - string_count(prefix_text, "\\'")) %2  
+    if ((string_count(prefix_text, '"') - string_count(prefix_text, '\\"')) % 2 ||
+      (string_count(prefix_text, "'") - string_count(prefix_text, "\\'")) % 2
     ) {
       return [];
     }
@@ -87,9 +87,11 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
     }
     const indentSize = this.getIndentSize(document, currentNode)
     let out = []
-    for(let template of this.templates) {
-      if(template.canUse(currentNode)) {
-        let item = template.buildCompletionItem(currentNode,position,pending_text.length + 1, indentSize);
+    for (let template of this.templates) {
+      if (template.canUse(currentNode)) {
+        //原因就是currentNode没有拿到.之后的内容
+        // 比如name.da currentNode的text只是name
+        let item = template.buildCompletionItem(currentNode, position, document, indentSize);
         out.push(item);
       }
     }
@@ -99,12 +101,12 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
     //   .map(t => t.buildCompletionItem(currentNode, indentSize))
   }
 
-  resolveCompletionItem (item: vsc.CompletionItem, token: vsc.CancellationToken): vsc.ProviderResult<vsc.CompletionItem> {
+  resolveCompletionItem(item: vsc.CompletionItem, token: vsc.CancellationToken): vsc.ProviderResult<vsc.CompletionItem> {
     currentSuggestion = item.label
     return item
   }
 
-  private isInsideComment (document: vsc.TextDocument, position: vsc.Position) { //这个用python来写怎么写？
+  private isInsideComment(document: vsc.TextDocument, position: vsc.Position) { //这个用python来写怎么写？
     const source = ts.createSourceFile('test.ts', document.getText(), ts.ScriptTarget.ES5, true)
     const pos = source.getPositionOfLineAndCharacter(position.line, position.character)
     const nodeKind = findNodeAtPosition(source, pos).kind
@@ -139,9 +141,9 @@ export class PostfixCompletionProvider implements vsc.CompletionItemProvider {
     //   }
     // })
     let builder = require("./templates/forTemplate").build
-    if(builder) {
+    if (builder) {
       let tpls = builder()
-      if(Array.isArray(tpls)) {
+      if (Array.isArray(tpls)) {
         this.templates.push(...tpls)
       } else {
         this.templates.push(tpls)
@@ -172,12 +174,12 @@ export const resetCurrentSuggestion = () => currentSuggestion = undefined
 
 const findNodeAtPosition = (source: ts.SourceFile, character: number) => { //这个什么意思？
   let matchingNodes: INode[] = []
-  source.statements.forEach(visitNode) 
+  source.statements.forEach(visitNode)
   let sortedNodes = _.orderBy(matchingNodes, [m => m.width, m => m.depth], ['asc', 'desc'])
 
   return sortedNodes.length > 0 && sortedNodes[0].node
 
-  function visitNode (node: ts.Node, depth: number = 0) { // 这个换成python的是怎么样的？
+  function visitNode(node: ts.Node, depth: number = 0) { // 这个换成python的是怎么样的？
     const start = node.getStart(source)
     const end = node.getEnd()
 
@@ -207,4 +209,3 @@ interface ICustomTemplateDefinition {
 }
 
 
-  

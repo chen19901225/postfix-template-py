@@ -26,7 +26,7 @@ export class CompletionItemBuilder {
     return this
   }
 
-  public replace = (replacement: string, position: vsc.Position, pending_length: number, useSnippets?: boolean): CompletionItemBuilder => {
+  public replace = (replacement: string, position: vsc.Position, document: vsc.TextDocument, useSnippets?: boolean): CompletionItemBuilder => {
     if (useSnippets) {
       const escapedCode = this.code.replace('$', '\\$')
 
@@ -50,14 +50,26 @@ export class CompletionItemBuilder {
     //   vsc.TextEdit.delete(rangeToDelete)
     // ]
 
+    const line = document.lineAt(position.line) // 当前行内容
+    let line_text = line.text
+
+
+    const dotIdx = line.text.lastIndexOf('.', position.character)  // .的position
+    if (dotIdx == -1) {
+      throw new Error("dot not find in line:" + line);
+    }
+    const pending_text = line_text.substring(dotIdx + 1, position.character)
+
     this.item.additionalTextEdits = [
-      vsc.TextEdit.delete(new vsc.Range(position.translate(0, -this.code.length - pending_length), position)) // 这个呢？
+      vsc.TextEdit.delete(new vsc.Range(position.translate(0, -this.code.length - pending_text.length - 1), position)) // 这个呢？
     ]
     // console
 
 
 
     return this
+
+
   }
 
   public description = (description: string): CompletionItemBuilder => {

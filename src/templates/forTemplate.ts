@@ -46,14 +46,14 @@ function try_get_list_name(text: string): [boolean, string] {
 }
 
 export class ForTemplate extends BaseForTemplate {
-  buildCompletionItem(node: ts.Node, position: vsc.Position, pending_length: number, indentSize?: number) {
+  buildCompletionItem(node: ts.Node, position: vsc.Position, document: vsc.TextDocument, indentSize?: number) {
     // console.log("node:", node);
     let nodeText = node.getText();
     if (is_var_dict(nodeText)) {
       return CompletionItemBuilder
         .create('for', node)
         .description('for (let i = 0; i < expr.Length; i++)')
-        .replace(`for (\${1:key},\${2:value}) in \${3:{{expr}}}.items():`, position, pending_length, true)
+        .replace(`for (\${1:key},\${2:value}) in \${3:{{expr}}}.items():`, position, document, true)
         // .replace(`for (let \${1:i} = 0; \${1} < \${2:{{expr}}}.length; \${1}++) {\n${getIndentCharacters()}\${0}\n}`, true)
         .build()
     }
@@ -62,7 +62,7 @@ export class ForTemplate extends BaseForTemplate {
       return CompletionItemBuilder
         .create('for', node)
         .description('for (let i = 0; i < expr.Length; i++)')
-        .replace(`for \${1:ele} in \${2:{{expr}}}:`, position, pending_length, true)
+        .replace(`for \${1:ele} in \${2:{{expr}}}:`, position, document, true)
         // .replace(`for (let \${1:i} = 0; \${1} < \${2:{{expr}}}.length; \${1}++) {\n${getIndentCharacters()}\${0}\n}`, true)
         .build()
     } else {
@@ -70,7 +70,7 @@ export class ForTemplate extends BaseForTemplate {
       return CompletionItemBuilder
         .create('for', node)
         .description('for (let i = 0; i < expr.Length; i++)')
-        .replace(replace_text, position, pending_length, true)
+        .replace(replace_text, position, document, true)
         // .replace(`for (let \${1:i} = 0; \${1} < \${2:{{expr}}}.length; \${1}++) {\n${getIndentCharacters()}\${0}\n}`, true)
         .build()
     }
