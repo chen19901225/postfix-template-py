@@ -1,5 +1,5 @@
 $branchList =  start-process git 'branches'
-echo $branchList
+# echo ${branchList}
 git add .
 git commit -m "test"
-git push origin master
+git push
