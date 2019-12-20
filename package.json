@@ -464,7 +464,7 @@
               ]
             },
             {
-              "name": "def_apply_none",
+              "name": "_def_apply_none",
               "body": "{{expr}}=None",
               "description": "method apply None",
               "when": [
