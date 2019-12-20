@@ -440,7 +440,7 @@
               ]
             },
             {
-              "name": "def_apply_true",
+              "name": "_def_apply_true",
               "body": "{{expr}}=True",
               "description": "method apply true",
               "when": [
@@ -452,7 +452,7 @@
               ]
             },
             {
-              "name": "def_apply_false",
+              "name": "_def_apply_false",
               "body": "{{expr}}=False",
               "description": "method apply false",
               "when": [
