@@ -2,7 +2,7 @@
   "name": "postfix-template-py",
   "displayName": "postfix-template-py",
   "description": "vscode postfix template py",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "publisher": "cqh",
   "engines": {
     "vscode": "^1.32.0"
