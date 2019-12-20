@@ -92,5 +92,5 @@ def new_tag_get(c, branch_name):
 @task
 def patch(c):
     gd(c)
-    c.run("git fetch")
+    # c.run("git fetch")
     c.run("vsce publish patch")
