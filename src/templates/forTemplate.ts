@@ -56,7 +56,7 @@ export class ForTemplate extends BaseForTemplate {
       return CompletionItemBuilder
         .create('for', node)
         .description('for (let i = 0; i < expr.Length; i++)')
-        .replace(`for (\${1:key},\${2:value}) in \${3:{{expr}}}.items():`, position, pending_length, true)
+        .replace(`for (\${1:key}, \${2:value}) in \${3:{{expr}}}.items():`, position, pending_length, true)
         // .replace(`for (let \${1:i} = 0; \${1} < \${2:{{expr}}}.length; \${1}++) {\n${getIndentCharacters()}\${0}\n}`, true)
         .build()
     }
