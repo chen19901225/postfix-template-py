@@ -1,3 +1,5 @@
+import time
+import json
 import invoke
 import functools
 from invoke import task
@@ -24,7 +26,7 @@ def commit(c, msg='ci'):
         from io import StringIO
         out_buffer = StringIO()
         err_buffer = StringIO()
-        c.run("git commit -m '{}'".format(msg), out_stream=out_buffer, err_stream=err_buffer)
+        c.run("git commit -m \"{}\"".format(msg), out_stream=out_buffer, err_stream=err_buffer)
     except invoke.exceptions.UnexpectedExit as e:
         # 当没有提交的内容时
         # err_buffer的内容为null
@@ -48,12 +50,12 @@ def commit(c, msg='ci'):
 
 
 @task
-def gd(c):
+def gd(c, msg='ci'):
     branch_name = get_branch_name(c)
     print("branch_name:{}".format(branch_name))
     c.run("git add .")
     print("before commit")
-    commit(c)
+    commit(c, msg)
 
     print("after commit")
     # c.run("git push origin {}".format(branch_name))
@@ -92,5 +94,10 @@ def new_tag_get(c, branch_name):
 @task
 def patch(c):
     gd(c)
-    # c.run("git fetch")
+    c.run("git fetch")
     c.run("vsce publish patch")
+    
+    
+    time.sleep(5)
+    verison = json.loads(open('package.json', 'r', encoding='utf-8').read())['verison']
+    gd(c, 'depploy with {}'.format(verison))
