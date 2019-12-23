@@ -59,33 +59,3 @@ This extension contributes the following settings:
 
 
 
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 0.0.4
-first commit 
-
-### 0.0.5
-update customTemplate examples
-
-### 0.0.8
-add mycustomTemplates to defaultCustomTemplates
-
-### 0.0.9
-try to fix situation like this  `if file = os.path.absfile(file): nn` -> `if file = os.path.absfile(file): is not None
-
-### 0.0.10
-still try to fix some bugs`
-
-## 0.0.20
-still update template bugs
-
-## 0.0.21 
-stip update template bugs
-
-**Enjoy!**
