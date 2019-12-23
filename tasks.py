@@ -99,5 +99,5 @@ def patch(c):
     
     
     time.sleep(5)
-    verison = json.loads(open('package.json', 'r', encoding='utf-8').read())['verison']
+    verison = json.loads(open('package.json', 'r', encoding='utf-8').read())['version']
     gd(c, 'depploy with {}'.format(verison))
