@@ -55,6 +55,10 @@ This extension contributes the following settings:
 |.if_yield| if  expr is not None:    yield expr|
 |.if_return| if  expr is not None:    return expr|
 |.ifn_return| if  expr is  None:    return expr|
+|.for| for expr in exprs:|
+|.for| for (key, value) in expr_d:|
+|.for| for (key, value) in d_expr:|
+
 
 
 
