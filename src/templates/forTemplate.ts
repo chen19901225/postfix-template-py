@@ -35,6 +35,8 @@ function is_var_dict(text: string) {
   }
 }
 function try_get_list_name(text: string): [boolean, string] {
+
+  text = text.split(/\.\s*/).pop();
   for (let start of ["iter_", "list_"]) {
     if (text.startsWith("iter_")) {
       return [true, text.slice(start.length)]
