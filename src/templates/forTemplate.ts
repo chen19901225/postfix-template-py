@@ -30,7 +30,7 @@ function is_var_dict(text: string) {
   if (text.endsWith("_d")) {
     return true;
   }
-  if(text.startsWith("d_")) {
+  if (text.startsWith("d_")) {
     return true;
   }
 }
@@ -51,10 +51,11 @@ function try_get_list_name(text: string): [boolean, string] {
 export class ForTemplate extends BaseForTemplate {
   buildCompletionItem(node: ts.Node, position: vsc.Position, pending_length: number, indentSize?: number) {
     // console.log("node:", node);
-    let nodeText = node.getText();
+    let parentNode = this.getCurrentNode(node);
+    let nodeText = parentNode.getText();
     if (is_var_dict(nodeText)) {
       return CompletionItemBuilder
-        .create('for', node)
+        .create('for', parentNode)
         .description('for (let i = 0; i < expr.Length; i++)')
         .replace(`for (\${1:key}, \${2:value}) in \${3:{{expr}}}.items():`, position, pending_length, true)
         // .replace(`for (let \${1:i} = 0; \${1} < \${2:{{expr}}}.length; \${1}++) {\n${getIndentCharacters()}\${0}\n}`, true)
@@ -63,7 +64,7 @@ export class ForTemplate extends BaseForTemplate {
     let [flag, name] = try_get_list_name(nodeText);
     if (!flag) {
       return CompletionItemBuilder
-        .create('for', node)
+        .create('for', parentNode)
         .description('for (let i = 0; i < expr.Length; i++)')
         .replace(`for \${1:ele} in \${2:{{expr}}}:`, position, pending_length, true)
         // .replace(`for (let \${1:i} = 0; \${1} < \${2:{{expr}}}.length; \${1}++) {\n${getIndentCharacters()}\${0}\n}`, true)
@@ -71,7 +72,7 @@ export class ForTemplate extends BaseForTemplate {
     } else {
       let replace_text = 'for ${1:' + name + '} in ${2:{{expr}}}:';
       return CompletionItemBuilder
-        .create('for', node)
+        .create('for', parentNode)
         .description('for (let i = 0; i < expr.Length; i++)')
         .replace(replace_text, position, pending_length, true)
         // .replace(`for (let \${1:i} = 0; \${1} < \${2:{{expr}}}.length; \${1}++) {\n${getIndentCharacters()}\${0}\n}`, true)
